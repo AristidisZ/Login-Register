@@ -38,9 +38,11 @@ class SignUp(QDialog):
 
         self.signbutton.clicked.connect(self.createaccount)
 
+
     def createaccount(self):
+        username = self.username.text()
         if self.passw.text()==self.confirmpassw.text():
-            username = self.username.text()
+
             passw=self.passw.text()
             print(username,passw)
 
