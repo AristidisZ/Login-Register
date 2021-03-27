@@ -22,9 +22,15 @@ class Login(QDialog):
         username=self.username.text()
         passw=self.passw.text()
         print(username,passw)
-        self.db.authentication(username,passw)
-        sys.exit(sys.argv)
+        if self.admin_login_checkbox.isChecked():
+            if self.db.authentication(username, passw, "admin"):
+                self.hide()
+                self.window = Main_admin()
+                self.window.show()
 
+        else:
+            if self.db.authentication(username, passw, "employee"):
+                sys.exit(sys.argv)
 
 
     def createfunction(self):
@@ -55,10 +61,24 @@ class SignUp(QDialog):
             self.window.show()
 
 
+class Main_admin(QDialog):
+    def __init__(self):
+        super(Main_admin,self).__init__()
+        uic.loadUi('Main_admin.ui', self)
+        self.db = Database()
+
+        # self.tabWidget.setEnabled(True)
+
+
+
+
+
+
 if __name__ == '__main__':
     app =QApplication(sys.argv)
     window = Login()
     window.show()
+
 
     sys.exit(app.exec_())
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>401</height>
+    <width>401</width>
+    <height>402</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -151,6 +151,19 @@
    </property>
    <property name="text">
     <string>Creat Account</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="admin_login_checkbox">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>30</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Admin Login</string>
    </property>
   </widget>
  </widget>
