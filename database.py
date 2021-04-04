@@ -56,17 +56,17 @@ class Database:
 		self.c.execute("INSERT INTO admin (username,password) VALUES (?,?)", (username, password))
 		self.commit()
 
-	def del_one(self):
+	def del_one_admin(self):
 		self.connect()
-		self.c.execute("DELETE from admin WHERE id = 5")
+		self.c.execute("DELETE from admin WHERE id = 4")
 		self.commit()
 
 	def authentication(self, username, password, auth_type):
 		self.connect()
 		if auth_type =="admin":
-			statement = f"SELECT username from admin WHERE username='{username}' AND Password = '{password}';"
+			statement = f"SELECT * from admin WHERE username='{username}' AND Password = '{password}';"
 		elif auth_type =="employee":
-			statement = f"SELECT username from employee WHERE username='{username}' AND Password = '{password}';"
+			statement = f"SELECT * from employee WHERE username='{username}' AND Password = '{password}';"
 		else:
 			pass
 			#statement = f"SELECT username from  WHERE username='{username}' AND Password = '{password}';"
@@ -74,13 +74,15 @@ class Database:
 
 		self.c.execute(statement)
 		self.conn.commit()
-		if not self.c.fetchone():  # An empty result evaluates to False.
+		account = self.c.fetchone()
+		self.conn.close()
+
+		if not account:  # An empty result evaluates to False.
 			print("Login failed")
 			return False
 		else:
 			print(f"Welcome {auth_type}")
-			return True
-		self.conn.close()
+			return account
 
 	def create_admin_table(self):
 
@@ -112,17 +114,25 @@ class Database:
 		# create table
 		self.c.execute("""CREATE TABLE employee(
 		id INTEGER PRIMARY KEY,
-		username text NOT NULL,
-		password text NOT NULL
-
+		username text NOT NULL UNIQUE,
+		password text NOT NULL,
+		first_name text NOT NULL,
+		last_name text NOT NULL,
+		phone_number INTEGER NOT NULL
+		
+		
 
 		)""")
 		# PRIMARYKEY(id, username)
 		self.commit()
 
-	def add_one_employee(self, username, password):
+	def delete_employee_table(self):
 		self.connect()
-		self.c.execute("INSERT INTO employee(username,password) VALUES (?,?)", (username, password))
+		self.c.execute("""DROP table employee""")
+
+	def add_one_employee(self, username, password, first_name, last_name, phone_number):
+		self.connect()
+		self.c.execute("INSERT INTO employee (username,password,first_name,last_name,phone_number) VALUES (?,?,?,?,?)", (username, password, first_name, last_name, phone_number))
 		self.commit()
 
 
@@ -143,13 +153,16 @@ if __name__ == "__main__":
 	# add_one()
 	db = Database()
 	# db.show_all()
-	# db.del_one()
+	# del_one()
     # db.authentication()
 	# db.create_admin_table()
 	# db.delete_admin_table()
-	# db.create_employee_table()
 	# db.add_one_employee()
-	db.show_all()
+	# db.show_all()
 	db.show_employee()
+	# db.create_employee_table()
+	# db.delete_employee_table()
+	# db.add_one_employee(username="em1",password="123",first_name="Aris",last_name="zotka",phone_number=6943690861)
+	# db.del_one_admin()
 
 
