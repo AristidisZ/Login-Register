@@ -65,11 +65,12 @@ class SignUp(QDialog):
             self.window.show()
 
 
-class Main_admin(QDialog):
+class Main_admin(QMainWindow):
 
     def __init__(self, user):
         super(Main_admin, self).__init__()
-        uic.loadUi('Main_admin.ui', self)
+        uic.loadUi('MainWindow_admin.ui', self)
+        # uic.loadUi('Main_admin.ui', self)
         self.user = user
         self.label_admin.setText(f"Welcome \n ID : {self.user[0]} \n User_name : {self.user[1]}")
         self.db = Database()
@@ -106,19 +107,19 @@ class Main_admin(QDialog):
     def refresh(self):
         self.db.connect()
         query = self.db.c.execute("SELECT * FROM employee").fetchall()
-        self.tableWidget.setRowCount(len(query))
+        self.employee_table.setRowCount(len(query))
 
         for row, item in enumerate(query, start=0):
             for column, value in enumerate(item):
-                self.tableWidget.setItem(row, column, QtWidgets.QTableWidgetItem(str(value)))
+                self.employee_table.setItem(row, column, QtWidgets.QTableWidgetItem(str(value)))
 
-    def update_search_table(self, results):
-        self.tableWidget.setRowCount(len(results))
-        for row, item in enumerate(results, start=0):
-            # print(f"row: {row} item: {item}")
-            for column, value in enumerate(item):
-                print(f"row: {row} item: {column}")
-                self.tableWidget.setItem(row, column, QtWidgets.QTableWidgetItem(str(value)))
+    # def update_search_table(self, results):
+    #     self.employee_table.setRowCount(len(results))
+    #     for row, item in enumerate(results, start=0):
+    #         # print(f"row: {row} item: {item}")
+    #         for column, value in enumerate(item):
+    #             print(f"row: {row} item: {column}")
+    #             self.employee_table.setItem(row, column, QtWidgets.QTableWidgetItem(str(value)))
 
     def search(self):
         self.db.connect()
@@ -127,12 +128,12 @@ class Main_admin(QDialog):
                 f"last_name LIKE '%{search}%' OR phone_number LIKE '%{search}%' "
         result = self.db.c.execute(query).fetchall()
         print(result)
-        self.tableWidget.setRowCount(len(result))
+        self.employee_table.setRowCount(len(result))
         for row, item in enumerate(result, start=0):
             # print(f"row: {row} item: {item}")
             for column, value in enumerate(item):
                 # print(f"row: {row} item: {column}")
-                self.tableWidget.setItem(row, column, QtWidgets.QTableWidgetItem(str(value)))
+                self.employee_table.setItem(row, column, QtWidgets.QTableWidgetItem(str(value)))
 
     def del_one_employee(self):
         self.db.connect()
@@ -140,14 +141,7 @@ class Main_admin(QDialog):
         self.db.c.execute("DELETE FROM employee WHERE id = ?", (id,))
         self.db.commit()
         self.refresh()
-        print(id)
-
-        #
-        # for row_number, row_data in enumerate(query):
-        #     self.tableWidget, data in enumerate(row_number)
-        #     for column_number, data in enumerate(row_data):
-        #         self.tableWidget.setItem(row_number,column_number,QtWidgets)
-
+        
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
