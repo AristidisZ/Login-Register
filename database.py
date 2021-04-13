@@ -118,8 +118,11 @@ class Database:
 		password text NOT NULL,
 		first_name text NOT NULL,
 		last_name text NOT NULL,
-		phone_number INTEGER NOT NULL
-		
+		age INTEGER NOT NULL, 
+		phone_number INTEGER NOT NULL,
+		department text NOT NULL,
+		city text NOT NULL,
+		address text NOT NULL
 		
 
 		)""")
@@ -130,11 +133,30 @@ class Database:
 		self.connect()
 		self.c.execute("""DROP table employee""")
 
-	def add_one_employee(self, username, password, first_name, last_name, phone_number):
+	def add_one_employee(self, username, password, first_name, last_name,age, phone_number, department, city, address):
 		self.connect()
-		self.c.execute("INSERT INTO employee (username,password,first_name,last_name,phone_number) VALUES (?,?,?,?,?)", (username, password, first_name, last_name, phone_number))
+		self.c.execute("INSERT INTO employee (username,password,first_name,last_name,age,phone_number,department,city,address) VALUES (?,?,?,?,?,?,?,?,?)", (username, password, first_name, last_name,age, phone_number, department, city, address))
 		self.commit()
 
+	def create_medicine_table(self):
+		self.connect()
+		self.c.execute("""CREATE TABLE medicine(
+		id INTEGER PRIMARY KEY,
+		med_name text NOT NULL UNIQUE,
+		expiration_date text NOT NULL,
+		category text NOT NULL,
+		preparation text NOT NULL,
+		quantity INTEGER NOT NULL, 
+		med_buy_price NUMERIC NOT NULL,
+		med_sell_price NUMERIC NOT NULL
+		
+
+		)""")
+
+	def add_one_medicine(self,med_name,expiration_date,category,preparation,quantity,medicationbp,medicationsp):
+		self.connect()
+		self.c.execute("INSERT INTO medicine (med_name,expiration_date,category,preparation,quantity,med_buy_price,med_sell_price) VALUES(?,?,?,?,?,?,?)",(med_name,expiration_date,category,preparation,quantity,medicationbp,medicationsp))
+		self.commit()
 
 	def show_employee(self):
 		self.connect()
@@ -145,6 +167,43 @@ class Database:
 		items = self.c.fetchall()
 		for item in items:
 			print(item)
+		self.commit()
+
+	def show_medicine(self):
+		self.connect()
+		self.c.execute("SELECT id, * FROM medicine")
+		# c.fetchone()
+		# c.fetchemany(1)
+		# print(c.fetchall())
+		items = self.c.fetchall()
+		for item in items:
+			print(item)
+		self.commit()
+
+	def create_clients_table(self):
+		self.connect()
+		self.c.execute("""CREATE TABLE clients(
+		id INTEGER PRIMARY KEY,
+		username text NOT NULL UNIQUE,
+		password text NOT NULL,
+		client_store text NOT NULL UNIQUE,
+		client_name text NOT NULL,
+		city text NOT NULL,
+		client_address text NOT NULL,
+		postal_code INTEGER NOT NULL, 
+		client_email text NOT NULL,
+		client_phone INTEGER NOT NULL
+
+
+		)""")
+
+	def delete_clients_table(self):
+		self.connect()
+		self.c.execute("""DROP table clients""")
+
+	def add_one_client(self,username_client, password_client, client_store, client_name,client_city,client_address,client_postal_code,client_email,client_phone):
+		self.connect()
+		self.c.execute("INSERT INTO clients (username,password,client_store,client_name,city,client_address,postal_code,client_email,client_phone) VALUES (?,?,?,?,?,?,?,?,?)", (username_client,password_client, client_store,client_name,client_city,client_address,client_postal_code, client_email, client_phone))
 		self.commit()
 
 
@@ -159,10 +218,15 @@ if __name__ == "__main__":
 	# db.delete_admin_table()
 	# db.add_one_employee()
 	# db.show_all()
-	db.show_employee()
+	# db.show_employee()
 	# db.create_employee_table()
 	# db.delete_employee_table()
 	# db.add_one_employee(username="em1",password="123",first_name="Aris",last_name="zotka",phone_number=6943690861)
 	# db.del_one_admin()
+	# db.create_medicine_table()
+	# db.add_one_medicine(med_name='Largactil',expiration_date='12/03/21-10/5/21',category='Antipsycotics',preparation='Pills',quantity='300',med_buy_price='0.15',med_sell_price='0.2')
+	# db.show_medicine()
+	# db.create_clients_table()
+	# db.delete_clients_table()
 
 
