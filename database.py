@@ -129,6 +129,12 @@ class Database:
 		# PRIMARYKEY(id, username)
 		self.commit()
 
+	def update_employee_table(self,ids,username, password, first_name, last_name,age, phone_number, department, city, address):
+		self.connect()
+		print(self)
+		self.c.execute("UPDATE employee	SET (username,password,first_name,last_name,age,phone_number,department,city,address) = (?,?,?,?,?,?,?,?,?) WHERE id = ?",(username, password, first_name, last_name,age, phone_number, department, city, address,ids))
+		self.commit()
+
 	def delete_employee_table(self):
 		self.connect()
 		self.c.execute("""DROP table employee""")
@@ -207,6 +213,13 @@ class Database:
 		self.commit()
 
 
+	def update_client_table(self,ids,username_client, password_client, client_store, client_name,client_city,client_address,client_postal_code,client_email,client_phone):
+		self.connect()
+		print(self)
+		self.c.execute("UPDATE clients SET (username_client,password_client, client_store,client_name,client_city,client_address,client_postal_code, client_email) = (?,?,?,?,?,?,?,?,?) WHERE id = ?",(username_client,password_client, client_store,client_name,client_city,client_address,client_postal_code, client_email, client_phone,ids))
+		self.commit()
+
+
 
 if __name__ == "__main__":
 	# add_one()
@@ -218,7 +231,7 @@ if __name__ == "__main__":
 	# db.delete_admin_table()
 	# db.add_one_employee()
 	# db.show_all()
-	# db.show_employee()
+	db.show_employee()
 	# db.create_employee_table()
 	# db.delete_employee_table()
 	# db.add_one_employee(username="em1",password="123",first_name="Aris",last_name="zotka",phone_number=6943690861)
