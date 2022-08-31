@@ -67,9 +67,10 @@ class Database:
 			statement = f"SELECT * from admin WHERE username='{username}' AND Password = '{password}';"
 		elif auth_type =="employee":
 			statement = f"SELECT * from employee WHERE username='{username}' AND Password = '{password}';"
-		else:
-			pass
-			#statement = f"SELECT username from  WHERE username='{username}' AND Password = '{password}';"
+		elif auth_type =="clients":
+			statement = f"SELECT * from clients WHERE username='{username}' AND password = '{password}';"
+
+
 
 
 		self.c.execute(statement)
@@ -216,8 +217,46 @@ class Database:
 	def update_client_table(self,ids,username_client, password_client, client_store, client_name,client_city,client_address,client_postal_code,client_email,client_phone):
 		self.connect()
 		print(self)
-		self.c.execute("UPDATE clients SET (username_client,password_client, client_store,client_name,client_city,client_address,client_postal_code, client_email) = (?,?,?,?,?,?,?,?,?) WHERE id = ?",(username_client,password_client, client_store,client_name,client_city,client_address,client_postal_code, client_email, client_phone,ids))
+		self.c.execute("UPDATE clients SET (username,password,client_store,client_name,city,client_address,postal_code,client_email,client_phone) = (?,?,?,?,?,?,?,?,?) WHERE id = ?",(username_client,password_client, client_store,client_name,client_city,client_address,client_postal_code, client_email, client_phone,ids))
 		self.commit()
+
+
+	def update_medication_table(self,ids,med_name, expiration_date, category, preparation,quantity,medicationbp,medicationsp):
+		self.connect()
+		print(self)
+		self.c.execute("UPDATE medicine SET (med_name,expiration_date,category,preparation,quantity,med_buy_price,med_sell_price) = (?,?,?,?,?,?,?) WHERE id = ?",(med_name, expiration_date, category, preparation,quantity,medicationbp,medicationsp,ids))
+		self.commit()
+
+
+	def create_order_table(self):
+		self.connect()
+		self.c.execute("""CREATE TABLE orders(
+				order_id INTEGER PRIMARY KEY,
+				client_id INTEGER NOT NULL,
+				client_adress TEXT NOT NULL,
+				postal_code TEXT NOT NULL,
+				phone_number NUMERIC NOT NULL,
+				total_price	 NUMERIC NOT NULL
+
+
+				)""")
+
+	def add_order(self,client_id,client_adress,postal_code,phone_number,total_price):
+		self.connect()
+		self.c.execute("INSERT INTO orders(client_id,client_adress,postal_code,phone_number,total_price) VALUES (?,?,?,?,?)",(client_id,client_adress,postal_code,phone_number,total_price))
+		self.commit()
+
+	def create_order_item(self):
+		self.connect()
+		self.c.execute("""CREATE TABLE order_item(
+						id INTEGER PRIMARY KEY,
+						
+						FOREIGN KEY (order_id)
+							REFERENCES orders (order_id)
+
+
+						)""")
+
 
 
 
@@ -231,15 +270,22 @@ if __name__ == "__main__":
 	# db.delete_admin_table()
 	# db.add_one_employee()
 	# db.show_all()
-	db.show_employee()
+	# db.show_employee()
 	# db.create_employee_table()
 	# db.delete_employee_table()
-	# db.add_one_employee(username="em1",password="123",first_name="Aris",last_name="zotka",phone_number=6943690861)
+	# for i in range(5):
+	# 	db.add_one_employee(username=f"em_{i}",password="123",first_name="Aris",last_name="zotka",phone_number=6943690861,age=5,department="as",city="sads",address="asaaa")
+
+	# for i in range(5):
+		# db.add_one_client(username_client=f"clientwe_{i}",password_client=1,client_store=f"125{i}",client_name="asd",client_city="asda",client_address="asd",client_email="asda",client_phone=123,client_postal_code=23123)
 	# db.del_one_admin()
 	# db.create_medicine_table()
 	# db.add_one_medicine(med_name='Largactil',expiration_date='12/03/21-10/5/21',category='Antipsycotics',preparation='Pills',quantity='300',med_buy_price='0.15',med_sell_price='0.2')
 	# db.show_medicine()
 	# db.create_clients_table()
 	# db.delete_clients_table()
-
+	# db.create_order_table()
+	# db.add_order(order_id=1,client_id=1,client_adress="dasda",postal_code=123,phone_number=123123312,total_price=20)
+	# a = db.c.execute("SELECT * FROM orders").fetchall()
+	# print(a)
 
